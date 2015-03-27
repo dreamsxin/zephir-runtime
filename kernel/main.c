@@ -31,7 +31,7 @@
 /**
  * Parses method parameters with minimum overhead
  */
-int zephirt_fetch_parameters(int num_args TSRMLS_DC, int required_args, int optional_args, ...)
+int zephir_fetch_parameters(int num_args TSRMLS_DC, int required_args, int optional_args, ...)
 {
 	va_list va;
 	int arg_count = (int) (zend_uintptr_t) *(zend_vm_stack_top(TSRMLS_C) - 1);
@@ -39,12 +39,12 @@ int zephirt_fetch_parameters(int num_args TSRMLS_DC, int required_args, int opti
 	int i;
 
 	if (num_args < required_args || (num_args > (required_args + optional_args))) {
-		zephirt_throw_exception_string(spl_ce_BadMethodCallException, SL("Wrong number of parameters") TSRMLS_CC);
+		zephir_throw_exception_string(spl_ce_BadMethodCallException, SL("Wrong number of parameters") TSRMLS_CC);
 		return FAILURE;
 	}
 
 	if (num_args > arg_count) {
-		zephirt_throw_exception_string(spl_ce_BadMethodCallException, SL("Could not obtain parameters for parsing") TSRMLS_CC);
+		zephir_throw_exception_string(spl_ce_BadMethodCallException, SL("Could not obtain parameters for parsing") TSRMLS_CC);
 		return FAILURE;
 	}
 

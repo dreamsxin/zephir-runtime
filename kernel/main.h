@@ -40,8 +40,8 @@
 
 #define SL(str) ZEND_STRL(str)
 #define SS(str) ZEND_STRS(str)
-#define ISL(str) (zephirt_interned_##str), (sizeof(#str)-1)
-#define ISS(str) (zephirt_interned_##str), (sizeof(#str))
+#define ISL(str) (zephir_interned_##str), (sizeof(#str)-1)
+#define ISS(str) (zephir_interned_##str), (sizeof(#str))
 
 #if defined(__GNUC__) || defined(__clang__)
 # define ZEPHIR_ATTR_NONNULL __attribute__((nonnull))
@@ -61,6 +61,6 @@
 # define ZEPHIR_ATTR_WARN_UNUSED_RESULT
 #endif
 
-int zephirt_fetch_parameters(int num_args TSRMLS_DC, int required_args, int optional_args, ...);
+int zephir_fetch_parameters(int num_args TSRMLS_DC, int required_args, int optional_args, ...);
 
 #endif

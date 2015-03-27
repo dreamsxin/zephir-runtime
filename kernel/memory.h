@@ -22,46 +22,46 @@
 #define ZEPHIR_KERNEL_MEMORY_H
 
 /* Variable Tracking */
-void zephirt_init_nvar(zval **var TSRMLS_DC);
-void zephirt_cpy_wrt(zval **dest, zval *var TSRMLS_DC);
-void zephirt_cpy_wrt_ctor(zval **dest, zval *var TSRMLS_DC);
+void zephir_init_nvar(zval **var TSRMLS_DC);
+void zephir_cpy_wrt(zval **dest, zval *var TSRMLS_DC);
+void zephir_cpy_wrt_ctor(zval **dest, zval *var TSRMLS_DC);
 
-void zephirt_value_dtor(zval *zvalue ZEND_FILE_LINE_DC);
+void zephir_value_dtor(zval *zvalue ZEND_FILE_LINE_DC);
 
 /* Memory Frames */
 #ifndef ZEPHIR_RELEASE
-void zephirt_memory_grow_stack(const char *func TSRMLS_DC);
-int zephirt_memory_restore_stack(const char *func TSRMLS_DC);
+void zephir_memory_grow_stack(const char *func TSRMLS_DC);
+int zephir_memory_restore_stack(const char *func TSRMLS_DC);
 
-#define ZEPHIR_MM_GROW() zephirt_memory_grow_stack(NULL TSRMLS_CC)
-#define ZEPHIR_MM_RESTORE() zephirt_memory_restore_stack(NULL TSRMLS_CC)
+#define ZEPHIR_MM_GROW() zephir_memory_grow_stack(NULL TSRMLS_CC)
+#define ZEPHIR_MM_RESTORE() zephir_memory_restore_stack(NULL TSRMLS_CC)
 
 #else
-void zephirt_memory_grow_stack(TSRMLS_D);
-int zephirt_memory_restore_stack(TSRMLS_D);
+void zephir_memory_grow_stack(TSRMLS_D);
+int zephir_memory_restore_stack(TSRMLS_D);
 
-#define ZEPHIR_MM_GROW() zephirt_memory_grow_stack(TSRMLS_C)
-#define ZEPHIR_MM_RESTORE() zephirt_memory_restore_stack(TSRMLS_C)
+#define ZEPHIR_MM_GROW() zephir_memory_grow_stack(TSRMLS_C)
+#define ZEPHIR_MM_RESTORE() zephir_memory_restore_stack(TSRMLS_C)
 
 #endif
 
-void zephirt_memory_observe(zval **var TSRMLS_DC);
-void zephirt_memory_remove(zval **var TSRMLS_DC);
-void zephirt_memory_alloc(zval **var TSRMLS_DC);
-void zephirt_memory_alloc_pnull(zval **var TSRMLS_DC);
+void zephir_memory_observe(zval **var TSRMLS_DC);
+void zephir_memory_remove(zval **var TSRMLS_DC);
+void zephir_memory_alloc(zval **var TSRMLS_DC);
+void zephir_memory_alloc_pnull(zval **var TSRMLS_DC);
 
-int zephirt_clean_restore_stack(TSRMLS_D);
+int zephir_clean_restore_stack(TSRMLS_D);
 
 /* Virtual symbol tables */
-void zephirt_create_symbol_table(TSRMLS_D);
-/*void zephirt_restore_symbol_table(TSRMLS_D);*/
-void zephirt_clean_symbol_tables(TSRMLS_D);
+void zephir_create_symbol_table(TSRMLS_D);
+/*void zephir_restore_symbol_table(TSRMLS_D);*/
+void zephir_clean_symbol_tables(TSRMLS_D);
 
 /** Export symbols to active symbol table */
-int zephirt_set_symbol(zval *key_name, zval *value TSRMLS_DC);
-int zephirt_set_symbol_str(char *key_name, unsigned int key_length, zval *value TSRMLS_DC);
+int zephir_set_symbol(zval *key_name, zval *value TSRMLS_DC);
+int zephir_set_symbol_str(char *key_name, unsigned int key_length, zval *value TSRMLS_DC);
 
-void zephirt_copy_ctor(zval *destiny, zval *origin);
+void zephir_copy_ctor(zval *destiny, zval *origin);
 
 /* Memory macros */
 #define ZEPHIR_ALLOC_ZVAL(z) \
@@ -79,7 +79,7 @@ void zephirt_copy_ctor(zval *destiny, zval *origin);
 	Z_UNSET_ISREF_P(z);
 
 #define ZEPHIR_INIT_VAR(z) \
-	zephirt_memory_alloc(&z TSRMLS_CC)
+	zephir_memory_alloc(&z TSRMLS_CC)
 
 #define ZEPHIR_INIT_NVAR(z)\
 	if (z) { \
@@ -93,7 +93,7 @@ void zephirt_copy_ctor(zval *destiny, zval *origin);
 		} \
 		ZVAL_NULL(z); \
 	} else { \
-		zephirt_memory_alloc(&z TSRMLS_CC); \
+		zephir_memory_alloc(&z TSRMLS_CC); \
 	}
 
 /**
@@ -124,7 +124,7 @@ void zephirt_copy_ctor(zval *destiny, zval *origin);
 		} \
 		ZVAL_NULL(z); \
 	} else { \
-		zephirt_memory_alloc_pnull(&z TSRMLS_CC); \
+		zephir_memory_alloc_pnull(&z TSRMLS_CC); \
 	}
 
 /* only removes the value body of the zval */
@@ -137,11 +137,11 @@ void zephirt_copy_ctor(zval *destiny, zval *origin);
 			Z_UNSET_ISREF_P(z); \
 			ZVAL_NULL(z); \
 		} else {\
-			zephirt_value_dtor(z ZEND_FILE_LINE_CC); \
+			zephir_value_dtor(z ZEND_FILE_LINE_CC); \
 			ZVAL_NULL(z); \
 		} \
 	} else { \
-		zephirt_memory_alloc(&z TSRMLS_CC); \
+		zephir_memory_alloc(&z TSRMLS_CC); \
 	}
 
 #define ZEPHIR_CPY_WRT(d, v) \
@@ -150,7 +150,7 @@ void zephirt_copy_ctor(zval *destiny, zval *origin);
 			zval_ptr_dtor(&d); \
 		} \
 	} else { \
-		zephirt_memory_observe(&d TSRMLS_CC); \
+		zephir_memory_observe(&d TSRMLS_CC); \
 	} \
 	Z_ADDREF_P(v); \
 	d = v;
@@ -161,7 +161,7 @@ void zephirt_copy_ctor(zval *destiny, zval *origin);
 			zval_ptr_dtor(&d); \
 		} \
 	} else { \
-		zephirt_memory_observe(&d TSRMLS_CC); \
+		zephir_memory_observe(&d TSRMLS_CC); \
 	} \
 	ALLOC_ZVAL(d); \
 	*d = *v; \
@@ -171,7 +171,7 @@ void zephirt_copy_ctor(zval *destiny, zval *origin);
 
 /* */
 #define ZEPHIR_OBS_VAR(z) \
-	zephirt_memory_observe(&z TSRMLS_CC)
+	zephir_memory_observe(&z TSRMLS_CC)
 
 #define ZEPHIR_OBS_NVAR(z)\
 	if (z) { \
@@ -182,7 +182,7 @@ void zephirt_copy_ctor(zval *destiny, zval *origin);
 			z = NULL; \
 		} \
 	} else { \
-		zephirt_memory_observe(&z TSRMLS_CC); \
+		zephir_memory_observe(&z TSRMLS_CC); \
 	}
 
 #define ZEPHIR_OBSERVE_OR_NULLIFY_PPZV(ppzv) \
@@ -194,7 +194,7 @@ void zephirt_copy_ctor(zval *destiny, zval *origin);
 				*tmp_ = NULL; \
 			} \
 			else { \
-				zephirt_memory_observe((ppzv) TSRMLS_CC); \
+				zephir_memory_observe((ppzv) TSRMLS_CC); \
 			} \
 		} \
 	} while (0)
@@ -206,7 +206,7 @@ void zephirt_copy_ctor(zval *destiny, zval *origin);
 			z = NULL; \
 		} \
 		else { \
-			zephirt_memory_observe(&z TSRMLS_CC); \
+			zephir_memory_observe(&z TSRMLS_CC); \
 		} \
 	} while (0)
 
@@ -227,7 +227,7 @@ void zephirt_copy_ctor(zval *destiny, zval *origin);
 #define ZEPHIR_SEPARATE_PARAM(z) \
 	do { \
 		zval *orig_ptr = z;\
-		zephirt_memory_observe(&z TSRMLS_CC);\
+		zephir_memory_observe(&z TSRMLS_CC);\
 		ALLOC_ZVAL(z);\
 		*z = *orig_ptr;\
 		zval_copy_ctor(z);\

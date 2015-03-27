@@ -164,7 +164,7 @@ static void zephir_process_parameters(zephir_context *context, zval *parameters 
 			zend_error(E_ERROR, "Cannot register zephir_fetch_parameters");
 		}
 
-		LLVMAddGlobalMapping(context->engine, function, zephirt_fetch_parameters);
+		LLVMAddGlobalMapping(context->engine, function, zephir_fetch_parameters);
 		LLVMSetFunctionCallConv(function, LLVMCCallConv);
 		LLVMAddFunctionAttr(function, LLVMNoUnwindAttribute);
 	}

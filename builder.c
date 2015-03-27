@@ -274,16 +274,16 @@ void zephir_build_memory_grow_stack(zephir_context *context) {
 	LLVMValueRef    function, args[2];
 	LLVMTypeRef     arg_tys[2];
 
-	//zephirt_memory_grow_stack(TSRMLS_C)
-	function = LLVMGetNamedFunction(context->module, "zephirt_memory_grow_stack");
+	//zephir_memory_grow_stack(TSRMLS_C)
+	function = LLVMGetNamedFunction(context->module, "zephir_memory_grow_stack");
 	if (!function) {
 
-		function = LLVMAddFunction(context->module, "zephirt_memory_grow_stack", LLVMFunctionType(LLVMVoidType(), NULL, 0, 0));
+		function = LLVMAddFunction(context->module, "zephir_memory_grow_stack", LLVMFunctionType(LLVMVoidType(), NULL, 0, 0));
 		if (!function) {
-			zend_error(E_ERROR, "Cannot register zephirt_memory_grow_stack");
+			zend_error(E_ERROR, "Cannot register zephir_memory_grow_stack");
 		}
 
-		LLVMAddGlobalMapping(context->engine, function, zephirt_memory_grow_stack);
+		LLVMAddGlobalMapping(context->engine, function, zephir_memory_grow_stack);
 		LLVMSetFunctionCallConv(function, LLVMCCallConv);
 		LLVMAddFunctionAttr(function, LLVMNoUnwindAttribute);
 	}
@@ -299,16 +299,16 @@ void zephir_build_memory_restore_stack(zephir_context *context) {
 	LLVMValueRef    function, args[2];
 	LLVMTypeRef     arg_tys[2];
 
-	//zephirt_memory_restore_stack(TSRMLS_C)
-	function = LLVMGetNamedFunction(context->module, "zephirt_memory_restore_stack");
+	//zephir_memory_restore_stack(TSRMLS_C)
+	function = LLVMGetNamedFunction(context->module, "zephir_memory_restore_stack");
 	if (!function) {
 
-		function = LLVMAddFunction(context->module, "zephirt_memory_restore_stack", LLVMFunctionType(LLVMVoidType(), NULL, 0, 0));
+		function = LLVMAddFunction(context->module, "zephir_memory_restore_stack", LLVMFunctionType(LLVMVoidType(), NULL, 0, 0));
 		if (!function) {
-			zend_error(E_ERROR, "Cannot register zephirt_memory_restore_stack");
+			zend_error(E_ERROR, "Cannot register zephir_memory_restore_stack");
 		}
 
-		LLVMAddGlobalMapping(context->engine, function, zephirt_memory_restore_stack);
+		LLVMAddGlobalMapping(context->engine, function, zephir_memory_restore_stack);
 		LLVMSetFunctionCallConv(function, LLVMCCallConv);
 		LLVMAddFunctionAttr(function, LLVMNoUnwindAttribute);
 	}
@@ -324,16 +324,16 @@ void zephir_build_memory_alloc(zephir_context *context, LLVMValueRef value_ref) 
 	LLVMValueRef    function, args[2];
 	LLVMTypeRef     arg_tys[2];
 
-	function = LLVMGetNamedFunction(context->module, "zephirt_memory_alloc");
+	function = LLVMGetNamedFunction(context->module, "zephir_memory_alloc");
 	if (!function) {
 
 		arg_tys[0] = context->types.zval_double_pointer_type;
-		function = LLVMAddFunction(context->module, "zephirt_memory_alloc", LLVMFunctionType(LLVMVoidType(), arg_tys, 1, 0));
+		function = LLVMAddFunction(context->module, "zephir_memory_alloc", LLVMFunctionType(LLVMVoidType(), arg_tys, 1, 0));
 		if (!function) {
-			zend_error(E_ERROR, "Cannot register zephirt_memory_alloc");
+			zend_error(E_ERROR, "Cannot register zephir_memory_alloc");
 		}
 
-		LLVMAddGlobalMapping(context->engine, function, zephirt_memory_alloc);
+		LLVMAddGlobalMapping(context->engine, function, zephir_memory_alloc);
 		LLVMSetFunctionCallConv(function, LLVMCCallConv);
 		LLVMAddFunctionAttr(function, LLVMNoUnwindAttribute);
 	}
@@ -350,16 +350,16 @@ void zephir_build_memory_observe(zephir_context *context, LLVMValueRef value_ref
 	LLVMValueRef    function, args[2];
 	LLVMTypeRef     arg_tys[2];
 
-	function = LLVMGetNamedFunction(context->module, "zephirt_memory_observe");
+	function = LLVMGetNamedFunction(context->module, "zephir_memory_observe");
 	if (!function) {
 
 		arg_tys[0] = context->types.zval_double_pointer_type;
-		function = LLVMAddFunction(context->module, "zephirt_memory_observe", LLVMFunctionType(LLVMVoidType(), arg_tys, 1, 0));
+		function = LLVMAddFunction(context->module, "zephir_memory_observe", LLVMFunctionType(LLVMVoidType(), arg_tys, 1, 0));
 		if (!function) {
-			zend_error(E_ERROR, "Cannot register zephirt_memory_observe");
+			zend_error(E_ERROR, "Cannot register zephir_memory_observe");
 		}
 
-		LLVMAddGlobalMapping(context->engine, function, zephirt_memory_observe);
+		LLVMAddGlobalMapping(context->engine, function, zephir_memory_observe);
 		LLVMSetFunctionCallConv(function, LLVMCCallConv);
 		LLVMAddFunctionAttr(function, LLVMNoUnwindAttribute);
 	}

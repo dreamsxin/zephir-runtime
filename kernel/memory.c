@@ -45,7 +45,7 @@
  * Not all methods must grow/restore the zephir_memory_entry.
  */
 
-static zephir_memory_entry* zephirt_memory_grow_stack_common(zend_zephir_globals *g)
+static zephir_memory_entry* zephir_memory_grow_stack_common(zend_zephir_globals *g)
 {
     assert(g->start_memory != NULL);
     if (!g->active_memory) {
@@ -88,7 +88,7 @@ static zephir_memory_entry* zephirt_memory_grow_stack_common(zend_zephir_globals
     return g->active_memory;
 }
 
-static void zephirt_memory_restore_stack_common(zend_zephir_globals *g TSRMLS_DC)
+static void zephir_memory_restore_stack_common(zend_zephir_globals *g TSRMLS_DC)
 {
     size_t i;
     zephir_memory_entry *prev, *active_memory;
@@ -213,7 +213,7 @@ static void zephirt_memory_restore_stack_common(zend_zephir_globals *g TSRMLS_DC
 
 #ifndef ZEPHIR_RELEASE
 
-void zephirt_dump_memory_frame(zephir_memory_entry *active_memory TSRMLS_DC)
+void zephir_dump_memory_frame(zephir_memory_entry *active_memory TSRMLS_DC)
 {
     size_t i;
 
@@ -249,27 +249,27 @@ void zephirt_dump_memory_frame(zephir_memory_entry *active_memory TSRMLS_DC)
     fprintf(stderr, "End of the dump of the memory frame %p\n", active_memory);
 }
 
-void zephirt_dump_current_frame(TSRMLS_D)
+void zephir_dump_current_frame(TSRMLS_D)
 {
-    zend_zephir_globals *zephirt_globals_ptr = ZEPHIRT_VGLOBAL;
+    zend_zephir_globals *zephir_globals_ptr = ZEPHIRT_VGLOBAL;
 
-    if (UNEXPECTED(zephirt_globals_ptr->active_memory == NULL)) {
+    if (UNEXPECTED(zephir_globals_ptr->active_memory == NULL)) {
         fprintf(stderr, "WARNING: calling %s() without an active memory frame!\n", __func__);
-        //zephirt_print_backtrace();
+        //zephir_print_backtrace();
         return;
     }
 
-    zephirt_dump_memory_frame(zephirt_globals_ptr->active_memory TSRMLS_CC);
+    zephir_dump_memory_frame(zephir_globals_ptr->active_memory TSRMLS_CC);
 }
 
-void zephirt_dump_all_frames(TSRMLS_D)
+void zephir_dump_all_frames(TSRMLS_D)
 {
-    zend_zephir_globals *zephirt_globals_ptr = ZEPHIRT_VGLOBAL;
-    zephir_memory_entry *active_memory       = zephirt_globals_ptr->active_memory;
+    zend_zephir_globals *zephir_globals_ptr = ZEPHIRT_VGLOBAL;
+    zephir_memory_entry *active_memory       = zephir_globals_ptr->active_memory;
 
     fprintf(stderr, "*** DUMP START ***\n");
     while (active_memory != NULL) {
-        zephirt_dump_memory_frame(active_memory TSRMLS_CC);
+        zephir_dump_memory_frame(active_memory TSRMLS_CC);
         active_memory = active_memory->prev;
     }
 
@@ -279,33 +279,33 @@ void zephirt_dump_all_frames(TSRMLS_D)
 /**
  * Finishes the current memory stack by releasing allocated memory
  */
-int zephirt_memory_restore_stack(const char *func TSRMLS_DC)
+int zephir_memory_restore_stack(const char *func TSRMLS_DC)
 {
-    zend_zephir_globals *zephirt_globals_ptr = ZEPHIRT_VGLOBAL;
+    zend_zephir_globals *zephir_globals_ptr = ZEPHIRT_VGLOBAL;
 
-    if (UNEXPECTED(zephirt_globals_ptr->active_memory == NULL)) {
-        fprintf(stderr, "WARNING: calling zephirt_memory_restore_stack() without an active memory frame!\n");
-        //zephirt_print_backtrace();
+    if (UNEXPECTED(zephir_globals_ptr->active_memory == NULL)) {
+        fprintf(stderr, "WARNING: calling zephir_memory_restore_stack() without an active memory frame!\n");
+        //zephir_print_backtrace();
         return FAILURE;
     }
 
-    if (UNEXPECTED(zephirt_globals_ptr->active_memory->func != func)) {
+    if (UNEXPECTED(zephir_globals_ptr->active_memory->func != func)) {
         fprintf(stderr, "Trying to free someone else's memory frame!\n");
-        fprintf(stderr, "The frame was created by %s\n", zephirt_globals_ptr->active_memory->func);
+        fprintf(stderr, "The frame was created by %s\n", zephir_globals_ptr->active_memory->func);
         fprintf(stderr, "Calling function: %s\n", func);
-        //zephirt_print_backtrace();
+        //zephir_print_backtrace();
     }
 
-    zephirt_memory_restore_stack_common(zephirt_globals_ptr TSRMLS_CC);
+    zephir_memory_restore_stack_common(zephir_globals_ptr TSRMLS_CC);
     return SUCCESS;
 }
 
 /**
  * Adds a memory frame in the current executed method
  */
-void zephirt_memory_grow_stack(const char *func TSRMLS_DC)
+void zephir_memory_grow_stack(const char *func TSRMLS_DC)
 {
-    zephir_memory_entry *entry = zephirt_memory_grow_stack_common(ZEPHIRT_VGLOBAL);
+    zephir_memory_entry *entry = zephir_memory_grow_stack_common(ZEPHIRT_VGLOBAL);
     entry->func = func;
 }
 #else
@@ -313,23 +313,23 @@ void zephirt_memory_grow_stack(const char *func TSRMLS_DC)
 /**
  * Adds a memory frame in the current executed method
  */
-void zephirt_memory_grow_stack(TSRMLS_D)
+void zephir_memory_grow_stack(TSRMLS_D)
 {
     //fprintf(stderr, "here2");
-    zephirt_memory_grow_stack_common(ZEPHIRT_VGLOBAL);
+    zephir_memory_grow_stack_common(ZEPHIRT_VGLOBAL);
 }
 
 /**
  * Finishes the current memory stack by releasing allocated memory
  */
-int zephirt_memory_restore_stack(TSRMLS_D)
+int zephir_memory_restore_stack(TSRMLS_D)
 {
-    zephirt_memory_restore_stack_common(ZEPHIRT_VGLOBAL TSRMLS_CC);
+    zephir_memory_restore_stack_common(ZEPHIRT_VGLOBAL TSRMLS_CC);
     return SUCCESS;
 }
 #endif
 
-ZEPHIR_ATTR_NONNULL static void zephirt_reallocate_memory(const zend_zephir_globals *g)
+ZEPHIR_ATTR_NONNULL static void zephir_reallocate_memory(const zend_zephir_globals *g)
 {
     zephir_memory_entry *frame = g->active_memory;
     int persistent = (frame >= g->start_memory && frame < g->end_memory);
@@ -347,7 +347,7 @@ ZEPHIR_ATTR_NONNULL static void zephirt_reallocate_memory(const zend_zephir_glob
 //#endif
 }
 
-ZEPHIR_ATTR_NONNULL static void zephirt_reallocate_hmemory(const zend_zephir_globals *g)
+ZEPHIR_ATTR_NONNULL static void zephir_reallocate_hmemory(const zend_zephir_globals *g)
 {
     zephir_memory_entry *frame = g->active_memory;
     int persistent = (frame >= g->start_memory && frame < g->end_memory);
@@ -365,19 +365,19 @@ ZEPHIR_ATTR_NONNULL static void zephirt_reallocate_hmemory(const zend_zephir_glo
 //#endif
 }
 
-ZEPHIR_ATTR_NONNULL1(2) static inline void zephirt_do_memory_observe(zval **var, const zend_zephir_globals *g)
+ZEPHIR_ATTR_NONNULL1(2) static inline void zephir_do_memory_observe(zval **var, const zend_zephir_globals *g)
 {
     zephir_memory_entry *frame = g->active_memory;
 //#ifndef ZEPHIR_RELEASE
     if (UNEXPECTED(frame == NULL)) {
         fprintf(stderr, "ZEPHIR_MM_GROW() must be called before using any of MM functions or macros!");
-        //zephirt_print_backtrace();
+        //zephir_print_backtrace();
         abort();
     }
 //#endif
 
     if (UNEXPECTED(frame->pointer == frame->capacity)) {
-        zephirt_reallocate_memory(g);
+        zephir_reallocate_memory(g);
     }
 
 //#ifndef ZEPHIR_RELEASE
@@ -386,7 +386,7 @@ ZEPHIR_ATTR_NONNULL1(2) static inline void zephirt_do_memory_observe(zval **var,
         for (i = 0; i < frame->pointer; ++i) {
             if (frame->addresses[i] == var) {
                 fprintf(stderr, "Variable %p is already observed", var);
-                //zephirt_print_backtrace();
+                //zephir_print_backtrace();
                 abort();
             }
         }
@@ -400,20 +400,20 @@ ZEPHIR_ATTR_NONNULL1(2) static inline void zephirt_do_memory_observe(zval **var,
 /**
  * Observes a memory pointer to release its memory at the end of the request
  */
-void zephirt_memory_observe(zval **var TSRMLS_DC)
+void zephir_memory_observe(zval **var TSRMLS_DC)
 {
     zend_zephir_globals *g = ZEPHIRT_VGLOBAL;
-    zephirt_do_memory_observe(var, g);
+    zephir_do_memory_observe(var, g);
     *var = NULL; /* In case an exception or error happens BEFORE the observed variable gets initialized */
 }
 
 /**
  * Observes a variable and allocates memory for it
  */
-void zephirt_memory_alloc(zval **var TSRMLS_DC)
+void zephir_memory_alloc(zval **var TSRMLS_DC)
 {
     zend_zephir_globals *g = ZEPHIRT_VGLOBAL;
-    zephirt_do_memory_observe(var, g);
+    zephir_do_memory_observe(var, g);
     ALLOC_INIT_ZVAL(*var);
 }
 
@@ -421,7 +421,7 @@ void zephirt_memory_alloc(zval **var TSRMLS_DC)
  * Observes a variable and allocates memory for it
  * Marks hash key zvals to be nulled before freeing
  */
-void zephirt_memory_alloc_pnull(zval **var TSRMLS_DC)
+void zephir_memory_alloc_pnull(zval **var TSRMLS_DC)
 {
     zend_zephir_globals *g = ZEPHIRT_VGLOBAL;
     zephir_memory_entry *active_memory = g->active_memory;
@@ -429,16 +429,16 @@ void zephirt_memory_alloc_pnull(zval **var TSRMLS_DC)
 //#ifndef ZEPHIR_RELEASE
     if (UNEXPECTED(active_memory == NULL)) {
         fprintf(stderr, "ZEPHIR_MM_GROW() must be called before using any of MM functions or macros!");
-        //zephirt_print_backtrace();
+        //zephir_print_backtrace();
         abort();
     }
 //#endif
 
-    zephirt_do_memory_observe(var, g);
+    zephir_do_memory_observe(var, g);
     ALLOC_INIT_ZVAL(*var);
 
     if (active_memory->hash_pointer == active_memory->hash_capacity) {
-        zephirt_reallocate_hmemory(g);
+        zephir_reallocate_hmemory(g);
     }
 
     active_memory->hash_addresses[active_memory->hash_pointer] = var;
@@ -448,7 +448,7 @@ void zephirt_memory_alloc_pnull(zval **var TSRMLS_DC)
 /**
  * Removes a memory pointer from the active memory pool
  */
-void zephirt_memory_remove(zval **var TSRMLS_DC) {
+void zephir_memory_remove(zval **var TSRMLS_DC) {
     zval_ptr_dtor(var);
     *var = NULL;
 }
@@ -456,12 +456,12 @@ void zephirt_memory_remove(zval **var TSRMLS_DC) {
 /**
  * Cleans the phalcon memory stack recursivery
  */
-int zephirt_clean_restore_stack(TSRMLS_D) {
+int zephir_clean_restore_stack(TSRMLS_D) {
 
-    zend_zephir_globals *zephirt_globals_ptr = ZEPHIRT_VGLOBAL;
+    zend_zephir_globals *zephir_globals_ptr = ZEPHIRT_VGLOBAL;
 
-    while (zephirt_globals_ptr->active_memory != NULL) {
-        zephirt_memory_restore_stack_common(zephirt_globals_ptr TSRMLS_CC);
+    while (zephir_globals_ptr->active_memory != NULL) {
+        zephir_memory_restore_stack_common(zephir_globals_ptr TSRMLS_CC);
     }
 
     return SUCCESS;
@@ -470,7 +470,7 @@ int zephirt_clean_restore_stack(TSRMLS_D) {
 /**
  * Copies a variable only if its refcount is greater than 1
  */
-void zephirt_copy_ctor(zval *destination, zval *origin) {
+void zephir_copy_ctor(zval *destination, zval *origin) {
     if (Z_REFCOUNT_P(origin) > 1) {
         zval_copy_ctor(destination);
     } else {
@@ -481,25 +481,25 @@ void zephirt_copy_ctor(zval *destination, zval *origin) {
 /**
  * Creates virtual symbol tables dynamically
  */
-void zephirt_create_symbol_table(TSRMLS_D) {
+void zephir_create_symbol_table(TSRMLS_D) {
 
     zephir_symbol_table *entry;
-    zend_zephir_globals *zephirt_globals_ptr = ZEPHIRT_VGLOBAL;
+    zend_zephir_globals *zephir_globals_ptr = ZEPHIRT_VGLOBAL;
     HashTable *symbol_table;
 
 //#ifndef ZEPHIR_RELEASE
-    if (!zephirt_globals_ptr->active_memory) {
+    if (!zephir_globals_ptr->active_memory) {
         fprintf(stderr, "ERROR: Trying to create a virtual symbol table without a memory frame");
-        //zephirt_print_backtrace();
+        //zephir_print_backtrace();
         return;
     }
 //#endif
 
     entry = (zephir_symbol_table *) emalloc(sizeof(zephir_symbol_table));
-    entry->scope = zephirt_globals_ptr->active_memory;
+    entry->scope = zephir_globals_ptr->active_memory;
     entry->symbol_table = EG(active_symbol_table);
-    entry->prev = zephirt_globals_ptr->active_symbol_table;
-    zephirt_globals_ptr->active_symbol_table = entry;
+    entry->prev = zephir_globals_ptr->active_symbol_table;
+    zephir_globals_ptr->active_symbol_table = entry;
 
     ALLOC_HASHTABLE(symbol_table);
     zend_hash_init(symbol_table, 0, NULL, ZVAL_PTR_DTOR, 0);
@@ -509,7 +509,7 @@ void zephirt_create_symbol_table(TSRMLS_D) {
 /**
  * Restores all the virtual symbol tables
  */
-void zephirt_clean_symbol_tables(TSRMLS_D) {
+void zephir_clean_symbol_tables(TSRMLS_D) {
 
     /*unsigned int i;
 
@@ -525,7 +525,7 @@ void zephirt_clean_symbol_tables(TSRMLS_D) {
 /**
  * Exports symbols to the active symbol table
  */
-int zephirt_set_symbol(zval *key_name, zval *value TSRMLS_DC) {
+int zephir_set_symbol(zval *key_name, zval *value TSRMLS_DC) {
 
     if (!EG(active_symbol_table)) {
         zend_rebuild_symbol_table(TSRMLS_C);
@@ -547,7 +547,7 @@ int zephirt_set_symbol(zval *key_name, zval *value TSRMLS_DC) {
 /**
  * Exports a string symbol to the active symbol table
  */
-int zephirt_set_symbol_str(char *key_name, unsigned int key_length, zval *value TSRMLS_DC) {
+int zephir_set_symbol_str(char *key_name, unsigned int key_length, zval *value TSRMLS_DC) {
 
     if (!EG(active_symbol_table)) {
         zend_rebuild_symbol_table(TSRMLS_C);
@@ -564,7 +564,7 @@ int zephirt_set_symbol_str(char *key_name, unsigned int key_length, zval *value 
     return SUCCESS;
 }
 
-static inline void zephirt_dtor_func(zval *zvalue ZEND_FILE_LINE_DC)
+static inline void zephir_dtor_func(zval *zvalue ZEND_FILE_LINE_DC)
 {
     switch (Z_TYPE_P(zvalue) & IS_CONSTANT_TYPE_MASK) {
         case IS_STRING:
@@ -605,10 +605,10 @@ static inline void zephirt_dtor_func(zval *zvalue ZEND_FILE_LINE_DC)
     }
 }
 
-void zephirt_value_dtor(zval *zvalue ZEND_FILE_LINE_DC)
+void zephir_value_dtor(zval *zvalue ZEND_FILE_LINE_DC)
 {
     if (zvalue->type <= IS_BOOL) {
         return;
     }
-    zephirt_dtor_func(zvalue ZEND_FILE_LINE_RELAY_CC);
+    zephir_dtor_func(zvalue ZEND_FILE_LINE_RELAY_CC);
 }

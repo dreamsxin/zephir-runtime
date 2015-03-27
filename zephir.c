@@ -48,7 +48,7 @@ zend_op_array *(*zephir_orig_compile_file)(zend_file_handle *file_handle, int ty
 /**
  * Initialize globals on each request or each thread started
  */
-static void php_zephirt_init_globals(zend_zephir_globals *zephir_globals TSRMLS_DC)
+static void php_zephir_init_globals(zend_zephir_globals *zephir_globals TSRMLS_DC)
 {
 
 	/* Memory options */
@@ -232,7 +232,7 @@ static PHP_RINIT_FUNCTION(zephir) {
 
 	zend_zephir_globals *zephir_globals_ptr	= ZEPHIRT_VGLOBAL;
 
-	php_zephirt_init_globals(zephir_globals_ptr TSRMLS_CC);
+	php_zephir_init_globals(zephir_globals_ptr TSRMLS_CC);
 
 	zephir_initialize_memory(zephir_globals_ptr TSRMLS_CC);
 
